@@ -59,7 +59,7 @@ por = Image.open(ROOT / "_source/Diego_Profile_ORIGINAL.png").convert("RGB")
 por = por.crop((214, 40, 214 + 880, 40 + 1100)).resize((400, 500), Image.LANCZOS)
 mask = Image.new("L", por.size, 0); ImageDraw.Draw(mask).rounded_rectangle((0, 0, *por.size), 22, fill=255)
 im.paste(por, (W - 80 - 400, 65), mask)
-headline(d, "Enterprise AV Strategy & Systems", "Enterprise AV that works for real people, at real scale.", None, width=600, size=60)
+headline(d, "Enterprise AV Strategy & Systems", "Enterprise AV, beyond the demo room.", None, width=600, size=60)
 d.text((80, 470), "Diego Gonzalez · Author of AV PM for Rookies", font=F(SANS, 26, 500), fill=(232, 237, 244))
 im.save(OG / "og-home.png", optimize=True)
 

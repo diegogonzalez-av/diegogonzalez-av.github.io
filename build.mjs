@@ -31,7 +31,8 @@ async function loadInsights() {
     const slug = d.slug || f.replace(/^\d+-/, "").replace(/\.md$/, "");
     items.push({ ...d, slug, body: body.trim() });
   }
-  return items.sort((a, b) => (a.order ?? 99) - (b.order ?? 99) || String(b.date ?? "").localeCompare(String(a.date ?? "")));
+  // Newest first (date), then manual order. The featured item is handled separately by the templates.
+  return items.sort((a, b) => String(b.date ?? "").localeCompare(String(a.date ?? "")) || (a.order ?? 99) - (b.order ?? 99));
 }
 
 await rm(DIST, { recursive: true, force: true });

@@ -2,6 +2,7 @@
 title: A variation looks different from each side of the table
 kind: linkedin
 source: LinkedIn
+date: 2026-10-13
 url: https://www.linkedin.com/feed/update/urn:li:activity:7515671887797149696/
 order: 2
 topic: Delivery

@@ -17,7 +17,6 @@
       "Diego González González",
       "Diego Gonzalez Gonzalez"
     ],
-    "headline": "Global AV Product Manager | Enterprise AV Strategy, Systems & Technology Leadership | Author of “AV PM for Rookies”",
     "location": "London, United Kingdom",
     "credentials": [
       "MBA",
@@ -81,30 +80,8 @@
     "provider": null,
     "code": null
   },
-  "workWithMe": [
-    {
-      "key": "speaking",
-      "title": "Speaking & panels",
-      "text": "Conference talks, panels and internal sessions on Enterprise AV strategy, product thinking and what happens after handover.",
-      "subject": "Speaking enquiry"
-    },
-    {
-      "key": "editorial",
-      "title": "Podcasts & editorial",
-      "text": "Guest conversations, articles and commentary on AV, workplace technology, lifecycle and AI in AV operations.",
-      "subject": "Podcast / editorial enquiry"
-    },
-    {
-      "key": "advisory",
-      "title": "Advisory conversations",
-      "text": "A second opinion on AV strategy, standards and technology decisions, including where AI can genuinely help AV and workplace technology teams and how to implement it.",
-      "subject": "Advisory conversation"
-    },
-    {
-      "key": "workshops",
-      "title": "Workshops & training",
-      "text": "Practical sessions for AV and workplace technology teams moving from project delivery to product thinking.",
-      "subject": "Workshop / training enquiry"
-    }
-  ]
+  "collaboration": {
+    "title": "Speaking, editorial & selected advisory",
+    "text": "Open to selected conversations on Enterprise AV strategy, standards and where AI genuinely helps AV teams."
+  }
 }

@@ -47,15 +47,48 @@ function insightHref(cfg, i) {
   if (i.url) return { href: i.url, ext: true, label: i.source === "LinkedIn" ? "Read on LinkedIn" : `Read in ${i.source}` };
   return { href: `/insights/${i.slug}/`, ext: false, label: "Read" };
 }
+const fmtDate = (d, month = "short") => (d ? new Date(d).toLocaleDateString("en-GB", { day: "numeric", month, year: "numeric" }) : "");
+
 export function insightCard(cfg, i) {
   const h = insightHref(cfg, i);
-  return `<a class="insight-card" href="${h.href}"${h.ext ? ' rel="noopener" target="_blank"' : ""}>
+  return `<a class="insight-card" href="${h.href}"${h.ext ? ' rel="noopener" target="_blank"' : ""} data-track="insight-${e(i.slug)}">
   ${insightTag(i)}
   <h3>${e(i.title)}</h3>
   ${i.quote ? `<blockquote>${e(i.quote)}</blockquote>` : ""}
   <p>${e(i.summary)}</p>
-  <span class="meta"><span class="link-arrow">${h.label}</span></span>
+  <span class="meta"><span class="link-arrow">${h.label}</span>${i.date ? `<time datetime="${i.date}">${fmtDate(i.date)}</time>` : ""}</span>
 </a>`;
+}
+
+/** Newest non-featured insight. To feature a new idea: add a Markdown file with a later date (and optionally image/imageAlt). */
+export const latestInsight = (insights) => insights.filter((i) => !i.featured && i.date).sort((a, b) => String(b.date).localeCompare(String(a.date)))[0];
+
+function latestCard(cfg, i) {
+  const h = insightHref(cfg, i);
+  return `<a class="latest" id="latest" href="${h.href}"${h.ext ? ' rel="noopener" target="_blank"' : ""} data-track="latest-insight">
+  ${i.image ? `<img class="latest__img" src="${i.image}" alt="${e(i.imageAlt ?? "")}" loading="lazy">` : ""}
+  <div class="latest__body">
+    <span class="tag"><b>Latest idea</b>· ${e(fmtDate(i.date, "long"))}</span>
+    <h3>${e(i.title)}</h3>
+    ${!i.image && i.quote ? `<blockquote>${e(i.quote)}</blockquote>` : ""}
+    <p>${e(i.summary)}</p>
+    <span class="link-arrow">${h.label}</span>
+  </div>
+</a>`;
+}
+
+function publishedCard(cfg, i) {
+  const h = insightHref(cfg, i);
+  const r = cfg.recognition.find((x) => /AVWeek/.test(x.label) && x.url);
+  return `<div class="published">
+  <a class="published__link" href="${h.href}" rel="noopener" target="_blank" data-track="av-magazine">
+    <span class="tag"><b>Published in ${e(i.source)}</b>· ${e(fmtDate(i.date, "long"))}</span>
+    <h3>${e(i.title)}</h3>
+    <blockquote>Commissioning proves that a system worked on test day. It does not prove that it was useful, usable or sustainable.</blockquote>
+    <span class="link-arrow">${h.label}</span>
+  </a>
+  ${r ? `<p class="published__note">Picked up by Tim Albright on AVNation's <a href="${r.url}" rel="noopener" target="_blank" data-track="avweek">AVWeek 790</a> as a roundtable talking point (15:39–31:12).</p>` : ""}
+</div>`;
 }
 export function insightFeature(cfg, i) {
   const h = insightHref(cfg, i);
@@ -109,19 +142,16 @@ function bookBlock(cfg, { headingLevel = "h2", dark = true } = {}) {
 }
 
 const TOPICS = [
-  ["Enterprise AV strategy", "Global scale, investment priorities and consistent experiences across regions."],
-  ["Systems & standards", "Standards with controlled choices, architectures that survive supply chains."],
-  ["Product thinking", "Problems before features, outcomes before outputs, discovery before spend."],
-  ["Reliability & lifecycle", "What happens after handover: supportability, updates and long-term value."],
-  ["AV operations", "Monitoring, support models and the boring discipline of things that work."],
-  ["User experience", "Rooms that need no instructions, and what it means when they do."],
-  ["AI & automation", "Where AI genuinely helps AV teams, and where it is mostly marketing."],
-  ["Industry & market trends", "Manufacturers, platforms and the economics behind the meeting room."]
+  ["Strategy & standards at scale", "Global consistency without one SKU everywhere: standards, investment priorities and controlled choices."],
+  ["Lifecycle, reliability & operations", "What happens after handover: supportability, updates, monitoring and the boring discipline of things that work."],
+  ["Experience & product thinking", "Rooms that need no instructions, problems before features, and outcomes over outputs."],
+  ["AI & the business of AV", "Where AI genuinely helps AV teams, where it is mostly marketing, and the economics behind the meeting room."]
 ];
 
 export function home(cfg, insights) {
   const featured = insights.find((i) => i.featured);
-  const rest = insights.filter((i) => !i.featured).slice(0, 3);
+  const latest = latestInsight(insights);
+  const rest = insights.filter((i) => !i.featured && i !== latest).slice(0, 3);
   const p = cfg.person;
   const rec = cfg.recognition[0];
   return {
@@ -134,12 +164,12 @@ export function home(cfg, insights) {
   <div class="wrap hero__grid">
     <div>
       <p class="hero__name">${e(p.name)}</p>
-      <h1>Enterprise AV that works for real people, at real scale.</h1>
-      <p class="hero__lede">Nearly two decades across the whole Enterprise AV lifecycle: designing and engineering systems, delivering complex projects, architecting solutions, consulting, leading engineering teams and shaping AV at global scale. I write, speak and build free tools about what makes AV work beyond the demo room.</p>
+      <h1>Enterprise AV, beyond the demo room.</h1>
+      <p class="hero__lede">Nearly two decades across engineering, integration, consulting, operations and product. I write about what actually determines whether AV works at scale: architecture, lifecycle, reliability, user experience and the decisions in between.</p>
       <div class="hero__ctas">
-        <a class="btn" href="/tools/">Explore the tools</a>
-        <a class="btn btn--ghost" href="/book/">Discover the book</a>
-        <a class="link-arrow" href="${cfg.contact.linkedin}" rel="noopener" target="_blank">Follow on LinkedIn</a>
+        <a class="btn" href="#latest" data-track="hero-latest">Read the latest insight</a>
+        <a class="btn btn--ghost" href="/tools/" data-track="hero-tools">Explore the tools</a>
+        <a class="link-arrow" href="/book/" data-track="hero-book">Discover the book</a>
       </div>
     </div>
     <figure class="portrait">
@@ -160,6 +190,29 @@ export function home(cfg, insights) {
   </div>
 </section>
 
+<section class="section section--white" id="insights">
+  <div class="wrap">
+    <div class="section__head">
+      <div>
+        <span class="eyebrow">Insights</span>
+        <h2>Notes from beyond the demo room</h2>
+      </div>
+      <a class="link-arrow" href="/insights/">All insights</a>
+    </div>
+    <div class="insights-top">
+      ${latest ? latestCard(cfg, latest) : ""}
+      ${featured ? publishedCard(cfg, featured) : ""}
+    </div>
+    <div class="insight-grid">
+      ${rest.map((i) => insightCard(cfg, i)).join("\n      ")}
+    </div>
+  </div>
+</section>
+
+<section class="section section--dark" id="book">
+  <div class="wrap">${bookBlock(cfg)}</div>
+</section>
+
 <section class="section" id="tools">
   <div class="wrap">
     <div class="section__head">
@@ -174,34 +227,14 @@ export function home(cfg, insights) {
   </div>
 </section>
 
-<section class="section section--white" id="insights">
-  <div class="wrap">
-    <div class="section__head">
-      <div>
-        <span class="eyebrow">Insights</span>
-        <h2>Notes from beyond the demo room</h2>
-      </div>
-      <a class="link-arrow" href="/insights/">All insights</a>
-    </div>
-    ${featured ? insightFeature(cfg, featured) + avweek(cfg) : ""}
-    <div class="insight-grid">
-      ${rest.map((i) => insightCard(cfg, i)).join("\n")}
-    </div>
-  </div>
-</section>
-
-<section class="section section--dark" id="book">
-  <div class="wrap">${bookBlock(cfg)}</div>
-</section>
-
-<section class="section" id="topics">
+<section class="section section--white" id="topics">
   <div class="wrap">
     <div class="section__head">
       <div>
         <span class="eyebrow">What I think about</span>
         <h2>Technology, people and the decisions in between</h2>
       </div>
-      <p class="lede">I see AV as an ecosystem rather than equipment in rooms: people, spaces, hardware, software, cloud services, operations and lifecycle decisions, all connected.</p>
+      <p class="lede">AV is an ecosystem rather than equipment in rooms: people, spaces, hardware, software, cloud services, operations and lifecycle decisions, all connected.</p>
     </div>
     <div class="topics">
       ${TOPICS.map(([t, d], n) => `<div class="topic"><span class="topic__n">${String(n + 1).padStart(2, "0")}</span><h3>${e(t)}</h3><p>${e(d)}</p></div>`).join("\n      ")}
@@ -209,31 +242,25 @@ export function home(cfg, insights) {
   </div>
 </section>
 
-<section class="section section--alt" id="work">
-  <div class="wrap">
-    ${workWithMe(cfg, "h2")}
-  </div>
+<section class="section section--alt" id="collaboration">
+  <div class="wrap">${collaboration(cfg)}</div>
 </section>
 `
   };
 }
 
-function workWithMe(cfg, H = "h2") {
-  return `<div class="section__head">
+function collaboration(cfg, H = "h2") {
+  const c = cfg.collaboration;
+  return `<div class="collab">
       <div>
-        <span class="eyebrow">Work together</span>
-        <${H}>Where I can help</${H}>
+        <span class="eyebrow">Collaboration</span>
+        <${H}>${e(c.title)}</${H}>
       </div>
-      <p class="lede">I'm selective about outside work, but always glad to hear about an interesting AV problem.</p>
-    </div>
-    <div class="help-grid">
-      ${cfg.workWithMe.map((w) => `<div class="help-card"><h3>${e(w.title)}</h3><p>${e(w.text)}</p><a class="link-arrow" ${mailAttrs(cfg, w.subject)} data-track="contact-${e(w.key)}">Get in touch</a></div>`).join("\n      ")}
-    </div>
-    <div class="contact-band">
-      <p><strong>Most conversations start on LinkedIn.</strong> I post every week about Enterprise AV: technology, standards, operations and where the industry is heading.</p>
-      <div class="contact-band__ctas">
-        <a class="btn btn--gold" href="${cfg.contact.linkedin}" rel="noopener" target="_blank" data-track="contact-linkedin">${icons.linkedin} Connect on LinkedIn</a>
-        <a class="btn btn--on-dark" ${mailAttrs(cfg, "Hello Diego")} data-track="contact-email">${icons.mail} Email</a>
+      <div>
+        <p class="lede">${e(c.text)}</p>
+        <div class="contact-band__ctas">
+          <a class="btn" href="/contact/" data-track="collab-start-conversation">Start a conversation</a>
+        </div>
       </div>
     </div>`;
 }
@@ -295,7 +322,7 @@ export function about(cfg) {
   </div>
 </section>
 <section class="section section--alt">
-  <div class="wrap">${workWithMe(cfg, "h2")}</div>
+  <div class="wrap">${collaboration(cfg, "h2")}</div>
 </section>`
   };
 }
@@ -395,24 +422,17 @@ export function insightPage(cfg, i, html) {
 export function contact(cfg) {
   return {
     path: "/contact/", nav: "contact",
-    title: "Contact Diego Gonzalez | Speaking, Editorial & Advisory",
-    description: "Get in touch with Diego Gonzalez about speaking, podcasts, editorial collaborations, workshops or advisory conversations on Enterprise AV and product thinking.",
+    title: "Contact Diego Gonzalez | Speaking, Editorial & Selected Advisory",
+    description: "Get in touch with Diego Gonzalez about speaking, podcasts, editorial pieces and selected advisory on Enterprise AV strategy, standards and AI in AV.",
     body: `
 <section class="page-hero">
   <div class="wrap">
     <span class="eyebrow">Contact</span>
     <h1>Let's talk</h1>
-    <p class="lede">Speaking, podcasts, editorial or a thoughtful AV problem. LinkedIn is the quickest way to reach me, and email works too.</p>
+    <p class="lede">${e(cfg.collaboration.text)} LinkedIn is the quickest way to reach me, and email works too.</p>
     <div class="hero__ctas" style="margin-top:24px">
       <a class="btn" href="${cfg.contact.linkedin}" rel="noopener" target="_blank" data-track="contact-linkedin">${icons.linkedin} Message me on LinkedIn</a>
       <a class="btn btn--ghost" ${mailAttrs(cfg, "Hello Diego")} data-track="contact-email">${icons.mail} <span data-mail-label>Send an email</span></a>
-    </div>
-  </div>
-</section>
-<section class="section--tight" style="padding-top:0">
-  <div class="wrap">
-    <div class="help-grid">
-      ${cfg.workWithMe.map((w) => `<div class="help-card"><h2 class="h3" style="font:650 1.15rem/1.3 var(--sans)">${e(w.title)}</h2><p>${e(w.text)}</p><a class="link-arrow" ${mailAttrs(cfg, w.subject)} data-track="contact-${e(w.key)}">Email about this</a></div>`).join("\n      ")}
     </div>
   </div>
 </section>`

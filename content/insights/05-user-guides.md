@@ -2,6 +2,7 @@
 title: When the user guide is a confession
 kind: linkedin
 source: LinkedIn
+date: 2026-11-03
 url: https://www.linkedin.com/feed/update/urn:li:activity:7523296732647190528/
 order: 5
 topic: User experience

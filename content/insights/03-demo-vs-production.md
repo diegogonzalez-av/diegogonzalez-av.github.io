@@ -2,6 +2,7 @@
 title: A good demo is not a production-ready product
 kind: linkedin
 source: LinkedIn
+date: 2026-10-27
 url: https://www.linkedin.com/feed/update/urn:li:activity:7520760235779846144/
 order: 3
 topic: Product

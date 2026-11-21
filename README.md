@@ -17,7 +17,26 @@ Static site, zero runtime dependencies, built by a ~100-line Node script and dep
 
 Browser QA of every tool control: copy `tests/browser/qa.html` to `dist/_qa.html`, run `npm run serve`, open http://localhost:8080/_qa.html (results appear on the page; delete the file afterwards).
 
-Then: `npm run check` (build + 36 tests) → `npm run serve` → open http://localhost:8080 → commit and push. GitHub Actions builds, tests and deploys; a failing test blocks the deploy.
+Then: `npm run check` (build + 37 tests) → `npm run serve` → open http://localhost:8080 → commit and push. GitHub Actions builds, tests and deploys; a failing test blocks the deploy.
+
+## Publishing a new insight (e.g. the Tuesday post)
+1. Save the visual (optional) as `assets/insights/<short-name>.jpg` (16:9 works best, ~1600 px wide).
+2. Create `content/insights/NN-short-name.md`:
+```
+---
+title: Everybody wants more of the room
+kind: linkedin
+source: LinkedIn
+date: 2026-11-24
+url: https://www.linkedin.com/feed/update/urn:li:activity:XXXXXXXXXXXXXXXXXXX/
+topic: Experience
+image: /assets/insights/short-name.jpg
+imageAlt: One-line description of the visual
+quote: Optional memorable line (shown only when there is no image)
+summary: Two lines that make someone want to read it.
+---
+```
+3. `npm run check` → commit → push. The newest dated item becomes **Latest idea** on the home page automatically; the AV Magazine piece stays alongside as **Published in AV Magazine** (`featured: true`).
 
 ## Structure
 ```
