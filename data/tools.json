@@ -1,0 +1,196 @@
+{
+  "_readme": "Assumptions, reference prices and sources for the tools. Every figure shown to users comes from here or from the documented calc modules. Each reference value carries its source and the date it was checked. Update the date when you re-verify.",
+  "meeting": {
+    "defaults": {
+      "GBP": {
+        "annualSalary": 55000,
+        "hourlyRate": 30,
+        "hoursPerWeek": 37.5,
+        "loadedMultiplier": 1.2
+      },
+      "USD": {
+        "annualSalary": 85000,
+        "hourlyRate": 45,
+        "hoursPerWeek": 40,
+        "loadedMultiplier": 1.4
+      },
+      "EUR": {
+        "annualSalary": 50000,
+        "hourlyRate": 30,
+        "hoursPerWeek": 38,
+        "loadedMultiplier": 1.3
+      }
+    },
+    "workingWeeksPerYear": 46,
+    "loadedMultiplierNotes": {
+      "GBP": "UK: employer National Insurance is 15% above the secondary threshold (2025/26 and 2026/27) and the auto-enrolment minimum employer pension contribution is 3%. 1.2 is a simplified, rounded estimate that ignores thresholds and other benefits.",
+      "USD": "US: wages and salaries were 70.0% of private-industry employer compensation costs in June 2026 (BLS ECEC), i.e. a multiplier of about 1.43. Rounded down to 1.4.",
+      "EUR": "Employer on-costs vary widely across eurozone countries. 1.3 is a judgement; replace it with your own figure."
+    },
+    "platforms": [
+      {
+        "key": "teams",
+        "label": "Microsoft Teams",
+        "reference": null,
+        "note": "No reference price shown: Microsoft list prices could not be verified when this tool was published, and Teams is usually licensed inside a Microsoft 365 bundle. Enter your own per-user monthly cost."
+      },
+      {
+        "key": "zoom",
+        "label": "Zoom",
+        "reference": {
+          "amount": 14.16,
+          "currency": "USD",
+          "plan": "Zoom Workplace Pro, per user per month, billed annually",
+          "url": "https://zoom.us/pricing",
+          "checked": "2026-11-21"
+        }
+      },
+      {
+        "key": "meet",
+        "label": "Google Meet",
+        "reference": {
+          "amount": 5.9,
+          "currency": "GBP",
+          "plan": "Google Workspace Business Starter, per user per month, annual commitment, excl. tax (UK)",
+          "url": "https://workspace.google.com/pricing",
+          "checked": "2026-11-21"
+        }
+      },
+      {
+        "key": "webex",
+        "label": "Cisco Webex",
+        "reference": null,
+        "note": "Webex does not publish a paid per-user price (free tier or contact sales). Enter your own figure."
+      },
+      {
+        "key": "other",
+        "label": "Other",
+        "reference": null
+      },
+      {
+        "key": "covered",
+        "label": "Already covered / ignore software",
+        "reference": null
+      }
+    ],
+    "rooms": {
+      "_note": "Illustrative planning figures for installed meeting-room technology (display, camera/audio, control, installation). They are NOT quotes or market data. Replace with your own costs.",
+      "lifecycleYears": 6,
+      "utilisation": 0.3,
+      "bookableHoursPerYear": 2070,
+      "types": [
+        {
+          "key": "none",
+          "label": "Personal device / no room system",
+          "cost": {
+            "GBP": 0,
+            "USD": 0,
+            "EUR": 0
+          }
+        },
+        {
+          "key": "small",
+          "label": "Small meeting room",
+          "cost": {
+            "GBP": 10000,
+            "USD": 12500,
+            "EUR": 11500
+          }
+        },
+        {
+          "key": "medium",
+          "label": "Medium meeting room",
+          "cost": {
+            "GBP": 25000,
+            "USD": 31000,
+            "EUR": 29000
+          }
+        },
+        {
+          "key": "large",
+          "label": "Large meeting room",
+          "cost": {
+            "GBP": 50000,
+            "USD": 62000,
+            "EUR": 57000
+          }
+        },
+        {
+          "key": "boardroom",
+          "label": "Boardroom / complex room",
+          "cost": {
+            "GBP": 120000,
+            "USD": 150000,
+            "EUR": 140000
+          }
+        }
+      ]
+    },
+    "sources": [
+      {
+        "label": "US Bureau of Labor Statistics, Employer Costs for Employee Compensation (release of 9 September 2026, June 2026 data)",
+        "url": "https://www.bls.gov/news.release/ecec.nr0.htm"
+      },
+      {
+        "label": "GOV.UK, Rates and thresholds for employers 2026 to 2027",
+        "url": "https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027"
+      },
+      {
+        "label": "GOV.UK, Workplace pensions: what you, your employer and the government pay",
+        "url": "https://www.gov.uk/workplace-pensions/what-you-your-employer-and-the-government-pay"
+      },
+      {
+        "label": "ONS, Average actual weekly hours of work for full-time workers (YBUY)",
+        "url": "https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/ybuy/lms"
+      },
+      {
+        "label": "Zoom pricing (checked 21 Nov 2026)",
+        "url": "https://zoom.us/pricing"
+      },
+      {
+        "label": "Google Workspace pricing (checked 21 Nov 2026)",
+        "url": "https://workspace.google.com/pricing"
+      }
+    ]
+  },
+  "display": {
+    "sources": [
+      {
+        "label": "AVIXA, Analytical and Basic Decision Making calculations (DISCAS, ANSI/AVIXA V202.01)",
+        "url": "https://www.avixa.org/resources/display-image-size-calculators/analytical-and-basic-decision-making-calculations"
+      },
+      {
+        "label": "FAA Human Factors Design Standard (DOT/FAA/TC-07/11), §5.2.2.3 and §5.2.3.3",
+        "url": "https://hf.tc.faa.gov/hfds/download-hfds/hfds_pdfs/dot_faa_tc_07_11.pdf"
+      },
+      {
+        "label": "Optimum HDTV viewing distance (overview of SMPTE ~30° and THX ~40° viewing-angle guidance)",
+        "url": "https://en.wikipedia.org/wiki/Optimum_HDTV_viewing_distance"
+      }
+    ]
+  },
+  "acoustics": {
+    "sources": [
+      {
+        "label": "Department for Education, Building Bulletin 93: Acoustic design of schools (2015), Table 6, meeting room / video conference room Tmf ≤ 0.8 s; Table 1, indoor ambient noise 40 dB LAeq,30min (new build)",
+        "url": "https://assets.publishing.service.gov.uk/media/5a8170d3e5274a2e8ab54012/BB93_February_2015.pdf"
+      },
+      {
+        "label": "ANSI/ASA S12.60, Acoustical performance criteria, design requirements and guidelines for schools (reverberation limit for rooms under 283 m³)",
+        "url": null
+      },
+      {
+        "label": "Microsoft Teams Rooms and Shure room-acoustics recommendations (≤ 0.5 s optimal for ceiling microphones)",
+        "url": null
+      },
+      {
+        "label": "HyperPhysics (Georgia State University), Table of absorption coefficients, after Hall, Table 15.1",
+        "url": "https://hyperphysics.gsu.edu/hbase/Acoustic/revmod.html"
+      },
+      {
+        "label": "Sabine and Eyring reverberation equations (overview)",
+        "url": "https://en.wikipedia.org/wiki/Reverberation"
+      }
+    ]
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "_readme": "Single source of truth for everything likely to change. Edit here, run `npm run build`, commit. Never hard-code these values in templates.",
+  "site": {
+    "url": "https://diegogonzalez-av.github.io",
+    "name": "Diego Gonzalez",
+    "locale": "en_GB",
+    "defaultTitle": "Diego Gonzalez | Enterprise AV Strategy, Systems & Workplace Technology",
+    "defaultDescription": "Diego Gonzalez is an Enterprise AV specialist with nearly two decades across AV engineering, project delivery, solutions architecture, consulting and global product management. Author of AV PM for Rookies, published in AV Magazine and builder of free tools for better meeting spaces.",
+    "ogImage": "/assets/og/og-home.png",
+    "themeColor": "#071B2E",
+    "googleSiteVerification": null,
+    "_googleSiteVerification_readme": "After go-live: Google Search Console → URL-prefix property → HTML tag method → paste only the content=\"...\" value here, rebuild and push."
+  },
+  "person": {
+    "name": "Diego Gonzalez",
+    "alternateNames": [
+      "Diego González González",
+      "Diego Gonzalez Gonzalez"
+    ],
+    "headline": "Global AV Product Manager | Enterprise AV Strategy, Systems & Technology Leadership | Author of “AV PM for Rookies”",
+    "location": "London, United Kingdom",
+    "credentials": [
+      "MBA",
+      "MSc Building Engineering & Industrial Installations",
+      "Degree in IT & Telecom Engineering (Acoustics, Image & Sound)"
+    ],
+    "languages": [
+      "English",
+      "Spanish",
+      "Portuguese",
+      "Galician",
+      "Catalan"
+    ],
+    "portrait": {
+      "alt": "Diego Gonzalez, smiling, wearing glasses and a textured shawl-collar cardigan",
+      "hero": "/assets/img/diego-gonzalez-orig",
+      "about": "/assets/img/diego-gonzalez",
+      "avatar": "/assets/img/avatar",
+      "square": "/assets/img/diego-gonzalez-square.jpg"
+    },
+    "tagline": "Enterprise AV Strategy & Systems",
+    "jobTitle": "Enterprise AV specialist",
+    "currentRole": "Global AV Product Manager"
+  },
+  "contact": {
+    "email": "diego.gonzalez.glez@gmail.com",
+    "linkedin": "https://www.linkedin.com/in/diego-gonzalez-enterprise-av/",
+    "linkedinActivity": "https://www.linkedin.com/in/diego-gonzalez-enterprise-av/recent-activity/all/"
+  },
+  "book": {
+    "title": "AV PM for Rookies",
+    "subtitle": "A Practical Guide to Product Management for Enterprise AV",
+    "author": "Diego Gonzalez",
+    "cover": "/assets/img/av-pm-for-rookies",
+    "coverAlt": "Cover of AV PM for Rookies: A Practical Guide to Product Management for Enterprise AV, by Diego Gonzalez",
+    "amazonUrl": "https://www.amazon.com/dp/B0HJ3988MZ?th=1",
+    "gumroadUrl": "https://gonzdi.gumroad.com/l/AVPMforRookies?layout=profile",
+    "gumroadFormats": "PDF + EPUB",
+    "amazonFormats": "Paperback & Kindle"
+  },
+  "recognition": [
+    {
+      "label": "Published in AV Magazine",
+      "detail": "Why AV projects should be judged after handover ends",
+      "url": "https://www.avinteractive.com/news/systems-design-integration/why-av-projects-should-be-judged-after-handover-ends-01-10-2026/"
+    },
+    {
+      "label": "Discussed on AVNation’s AVWeek",
+      "detail": "AVWeek 790, roundtable topic “Evaluating Projects After Handoffs” (15:39–31:12)",
+      "url": "https://www.avnation.tv/podcast/avweek-790-av-never-fails-to-fail/"
+    }
+  ],
+  "social": [
+    {
+      "name": "LinkedIn",
+      "url": "https://www.linkedin.com/in/diego-gonzalez-enterprise-av/"
+    }
+  ],
+  "analytics": {
+    "_readme": "Privacy-first and OFF by default. Set provider to \"goatcounter\" and code to your GoatCounter site code (e.g. \"diegogonzalez\") to enable. Only anonymous events are sent: page views, tool-open, calculation-complete, share-click. Calculator values are never sent.",
+    "provider": null,
+    "code": null
+  },
+  "workWithMe": [
+    {
+      "key": "speaking",
+      "title": "Speaking & panels",
+      "text": "Conference talks, panels and internal sessions on Enterprise AV strategy, product thinking and what happens after handover.",
+      "subject": "Speaking enquiry"
+    },
+    {
+      "key": "editorial",
+      "title": "Podcasts & editorial",
+      "text": "Guest conversations, articles and commentary on AV, workplace technology, lifecycle and AI in AV operations.",
+      "subject": "Podcast / editorial enquiry"
+    },
+    {
+      "key": "advisory",
+      "title": "Advisory conversations",
+      "text": "A second opinion on AV strategy, standards and technology decisions, including where AI can genuinely help AV and workplace technology teams and how to implement it.",
+      "subject": "Advisory conversation"
+    },
+    {
+      "key": "workshops",
+      "title": "Workshops & training",
+      "text": "Practical sessions for AV and workplace technology teams moving from project delivery to product thinking.",
+      "subject": "Workshop / training enquiry"
+    }
+  ]
+}

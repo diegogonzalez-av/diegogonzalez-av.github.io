@@ -1,0 +1,117 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Tool QA</title></head><body>
+<pre id="out">running</pre>
+<script>
+// Browser QA harness: loads each tool in an iframe, operates every control, checks the outputs react.
+// Run: copy to dist/_qa.html, serve dist, then: msedge --headless --dump-dom http://localhost:8765/_qa.html
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+const results = [];
+function load(src) { return new Promise(res => { const f = document.createElement("iframe"); f.style.width = "1200px"; f.style.height = "900px"; f.onload = () => setTimeout(() => res(f), 400); f.src = src; document.body.appendChild(f); }); }
+function api(f) {
+  const d = f.contentDocument;
+  const q = (s) => d.querySelector(s);
+  return {
+    d, q,
+    text: (id) => (q("#" + id)?.textContent || "").trim(),
+    hidden: (id) => { const e = q("#" + id); return !e || e.hidden || e.closest("[hidden]") !== null; },
+    set: (id, v) => { const e = q("#" + id); e.value = v; e.dispatchEvent(new Event("input", { bubbles: true })); e.dispatchEvent(new Event("change", { bubbles: true })); },
+    radio: (name, v) => { const e = q(`input[name="${name}"][value="${v}"]`); e.click(); },
+    click: (sel) => q(sel).click(),
+    open: (id) => { const e = q("#" + id); e.open = true; e.dispatchEvent(new Event("toggle")); },
+    attr: (sel, a) => q(sel)?.getAttribute(a) || ""
+  };
+}
+async function step(tool, name, a, act, watch, check) {
+  const before = watch.map(a.text);
+  try { await act(); } catch (e) { results.push(`FAIL ${tool} :: ${name} :: threw ${e.message}`); return; }
+  await sleep(60);
+  const after = watch.map(a.text);
+  let ok = check ? check(before, after) : after.some((v, i) => v !== before[i]);
+  results.push(`${ok ? "ok  " : "FAIL"} ${tool} :: ${name} :: ${watch.map((w, i) => `${w}: ${before[i]} → ${after[i]}`).join(" | ")}`);
+}
+(async () => {
+  // ---------- Display ----------
+  let a = api(await load("/tools/display-size-calculator/"));
+  const D = ["rec-min", "m-maxfar", "m-closest", "status-title", "m-angle"];
+  await step("display", "diagonal slider", a, () => a.set("diag", "110"), ["m-maxfar", "m-size", "diag-out"]);
+  await step("display", "distance slider", a, () => a.set("dist", "8"), ["rec-min", "dist-out"]);
+  await step("display", "element height 2%", a, () => a.radio("eh", "2"), ["rec-min"]);
+  await step("display", "element height 4%", a, () => a.radio("eh", "4"), ["rec-min"]);
+  await step("display", "mode ADM", a, () => a.radio("mode", "adm"), ["rec-min"], (b, x) => x[0] !== b[0] && !a.hidden("res-field") && a.hidden("eh-field"));
+  await step("display", "resolution 4K", a, () => a.radio("res", "2160"), ["rec-min"]);
+  await step("display", "resolution 1440p", a, () => a.radio("res", "1440"), ["rec-min"]);
+  await step("display", "mode video", a, () => a.radio("mode", "video"), ["rec-min", "status-title"]);
+  await step("display", "mode home", a, () => a.radio("mode", "home"), ["rec-min", "dist-label"], (b, x) => x[0] !== b[0] && !a.hidden("angle-field") && a.text("dist-label") === "Viewing distance");
+  await step("display", "home angle 40", a, () => a.radio("angle", "40"), ["rec-min"]);
+  await step("display", "back to BDM", a, () => a.radio("mode", "bdm"), ["rec-min"]);
+  await step("display", "bottom of screen 2.0 m", a, () => { a.open && a.q("details.advanced").setAttribute("open", ""); a.set("bottom", "2.0"); }, ["m-closest"]);
+  await step("display", "eye standing", a, () => a.radio("eye", "standing"), ["m-closest"]);
+  await step("display", "units imperial", a, () => a.click('[data-units="imperial"]'), ["m-maxfar", "dist-out"], (b, x) => x[0].includes("ft"));
+  await step("display", "distance slider (imperial)", a, () => a.set("dist", "20"), ["rec-min", "dist-out"]);
+  await step("display", "units metric", a, () => a.click('[data-units="metric"]'), ["m-maxfar"], (b, x) => x[0].includes("m") && !x[0].includes("ft"));
+
+  // ---------- Meeting ----------
+  a = api(await load("/tools/meeting-cost-calculator/"));
+  const M = ["headline", "r-meeting", "r-hourly", "r-hours", "r-month"];
+  await step("meeting", "attendees 10", a, () => a.set("attendees", "10"), ["r-meeting", "r-hours"]);
+  await step("meeting", "duration 30", a, () => a.set("duration", "30"), ["r-meeting"]);
+  await step("meeting", "salary 80000", a, () => a.set("rate", "80000"), ["r-hourly", "r-meeting"]);
+  await step("meeting", "hourly mode", a, () => a.radio("rateMode", "hourly"), ["r-hourly"]);
+  await step("meeting", "hourly 75", a, () => a.set("rate", "75"), ["r-hourly"], (b, x) => x[0].includes("75"));
+  await step("meeting", "currency USD", a, () => a.set("currency", "USD"), ["headline"], (b, x) => x[0].includes("$"));
+  await step("meeting", "currency EUR", a, () => a.set("currency", "EUR"), ["headline"], (b, x) => x[0].includes("€"));
+  await step("meeting", "frequency daily", a, () => a.radio("frequency", "daily"), ["headline", "r-hours"]);
+  await step("meeting", "frequency fortnightly", a, () => a.radio("frequency", "fortnightly"), ["headline"]);
+  await step("meeting", "frequency monthly", a, () => a.radio("frequency", "monthly"), ["headline"]);
+  await step("meeting", "frequency custom", a, () => a.radio("frequency", "custom"), ["headline"], () => !a.hidden("custom-field"));
+  await step("meeting", "custom 100/yr", a, () => a.set("custom", "100"), ["headline"]);
+  await step("meeting", "frequency one-off", a, () => a.radio("frequency", "once"), ["r-month", "kicker"], (b, x) => x[0] === "–");
+  await step("meeting", "frequency weekly", a, () => a.radio("frequency", "weekly"), ["r-month"]);
+  await step("meeting", "basis loaded", a, () => a.radio("basis", "loaded"), ["r-hourly"], (b, x) => x[0] !== b[0] && !a.hidden("multiplier-field"));
+  await step("meeting", "multiplier 1.5", a, () => a.set("multiplier", "1.5"), ["r-hourly"]);
+  await step("meeting", "back to salary mode", a, () => a.radio("rateMode", "salary"), ["r-hourly"]);
+  await step("meeting", "hours/week 40", a, () => a.set("hours", "40"), ["r-hourly"]);
+  await step("meeting", "weeks/year 40", a, () => a.set("weeks", "40"), ["headline", "r-hourly"]);
+  await step("meeting", "open technology", a, () => a.open("tech"), ["r-tech", "r-meeting"], () => !a.hidden("r-tech-wrap"));
+  await step("meeting", "room type large", a, () => a.set("room", "large"), ["r-tech", "roomcost-val"], (b, x) => x[0] !== b[0]);
+  await step("meeting", "room cost 90000", a, () => a.set("roomcost", "90000"), ["r-tech"]);
+  await step("meeting", "lifecycle 10", a, () => a.set("lifecycle", "10"), ["r-tech"]);
+  await step("meeting", "utilisation 60", a, () => a.set("util", "60"), ["r-tech"]);
+  await step("meeting", "currency USD (zoom ref)", a, () => a.set("currency", "USD"), ["headline"]);
+  await step("meeting", "platform zoom", a, () => a.set("platform", "zoom"), ["r-tech"], (b, x) => x[0] !== b[0] && a.q("#licence").value === "14.16");
+  await step("meeting", "licence 20", a, () => a.set("licence", "20"), ["r-tech"]);
+  await step("meeting", "remote attendees 8", a, () => a.set("remote", "8"), ["r-tech"]);
+  await step("meeting", "type video", a, () => a.radio("mtype", "video"), ["r-tech"], (b, x) => x[0] !== b[0] && a.hidden("room-field") && a.hidden("remote-field"));
+  await step("meeting", "type in-person", a, () => a.radio("mtype", "in-person"), ["r-tech"], (b, x) => x[0] !== b[0] && a.hidden("platform-field"));
+  await step("meeting", "platform covered", a, () => { a.radio("mtype", "hybrid"); a.set("platform", "covered"); }, ["r-tech"], () => a.q("#licence").disabled);
+  const li0 = a.attr("#btn-linkedin", "href");
+  await step("meeting", "share includes inputs", a, () => a.click("#share-inputs"), ["headline"], () => a.attr("#btn-linkedin", "href") !== li0 && a.attr("#btn-linkedin", "href").includes("rm%3D"));
+
+  // ---------- Acoustics ----------
+  a = api(await load("/tools/room-acoustics-checker/"));
+  await step("acoustics", "size small", a, () => a.radio("size", "small"), ["m-volume", "rt"]);
+  await step("acoustics", "size large", a, () => a.radio("size", "large"), ["m-volume", "rt"]);
+  await step("acoustics", "walls glass", a, () => a.radio("walls", "glass"), ["rt"]);
+  await step("acoustics", "walls soft", a, () => a.radio("walls", "soft"), ["rt"]);
+  await step("acoustics", "walls mixed", a, () => a.radio("walls", "mixed"), ["rt"]);
+  await step("acoustics", "floor hard", a, () => a.radio("floor", "hard"), ["rt"]);
+  await step("acoustics", "floor vinyl", a, () => a.radio("floor", "vinyl"), ["rt"]);
+  await step("acoustics", "ceiling exposed", a, () => a.radio("ceiling", "exposed"), ["rt", "status-label"]);
+  await step("acoustics", "ceiling finished", a, () => a.radio("ceiling", "finished"), ["rt"]);
+  await step("acoustics", "occupancy 13+", a, () => a.radio("occ", "13+"), ["rt-people"]);
+  await step("acoustics", "advanced mode", a, () => a.radio("amode", "advanced"), ["m-volume"], () => !a.hidden("dims-field") && a.hidden("size-field") && !a.hidden("adv-extra"));
+  await step("acoustics", "length 10", a, () => a.set("length", "10"), ["m-volume", "rt"]);
+  await step("acoustics", "width 7", a, () => a.set("width", "7"), ["m-volume"]);
+  await step("acoustics", "height 3.5", a, () => a.set("height", "3.5"), ["m-volume"]);
+  await step("acoustics", "walls soft for glass test", a, () => a.radio("walls", "soft"), ["rt"]);
+  await step("acoustics", "glass 100% over soft walls", a, () => a.set("glass", "100"), ["rt", "glass-out"]);
+  await step("acoustics", "glass 0%", a, () => a.set("glass", "0"), ["rt"]);
+  await step("acoustics", "walls drywall, glass 100%", a, () => { a.radio("walls", "drywall"); a.set("glass", "100"); }, ["rt"]);
+  await step("acoustics", "panels 20 m²", a, () => a.set("panels", "20"), ["rt", "m-abs"]);
+  await step("acoustics", "panel alpha 1.0", a, () => a.set("alpha", "1.0"), ["rt"]);
+  await step("acoustics", "units imperial", a, () => a.click('[data-units="imperial"]'), ["m-volume"], (b, x) => x[0].includes("ft"));
+  await step("acoustics", "length (imperial) 40", a, () => a.set("length", "40"), ["m-volume"]);
+  await step("acoustics", "quick mode", a, () => a.radio("amode", "quick"), ["m-volume"], () => a.hidden("dims-field"));
+
+  document.getElementById("out").textContent = "QA-RESULTS\n" + results.join("\n") + "\nQA-END";
+})();
+</script></body></html>

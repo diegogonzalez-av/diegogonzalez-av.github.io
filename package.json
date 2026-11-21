@@ -1,0 +1,14 @@
+{
+  "name": "diegogonzalez-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal site of Diego Gonzalez: Enterprise AV, product management and free meeting-space tools.",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "node build.mjs",
+    "serve": "node scripts/serve.mjs",
+    "test": "node --test \"tests/*.test.mjs\"",
+    "check": "node build.mjs && node --test \"tests/*.test.mjs\""
+  }
+}
