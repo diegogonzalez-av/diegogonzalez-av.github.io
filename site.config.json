@@ -43,8 +43,8 @@
   },
   "contact": {
     "email": "diego.gonzalez.glez@gmail.com",
-    "linkedin": "https://www.linkedin.com/in/diego-gonzalez-enterprise-av/",
-    "linkedinActivity": "https://www.linkedin.com/in/diego-gonzalez-enterprise-av/recent-activity/all/"
+    "linkedin": "https://www.linkedin.com/in/diego-gonzalez-enterprise-av",
+    "linkedinActivity": "https://www.linkedin.com/in/diego-gonzalez-enterprise-av/recent-activity/all"
   },
   "book": {
     "title": "AV PM for Rookies",
@@ -72,7 +72,7 @@
   "social": [
     {
       "name": "LinkedIn",
-      "url": "https://www.linkedin.com/in/diego-gonzalez-enterprise-av/"
+      "url": "https://www.linkedin.com/in/diego-gonzalez-enterprise-av"
     }
   ],
   "analytics": {
