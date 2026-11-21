@@ -96,11 +96,22 @@ test("sitemap lists every indexable page with the configured domain", async () =
 });
 
 test("no third-party requests except optional analytics", async () => {
+  const allowed = cfg.analytics?.provider === "goatcounter" ? ["gc.zgo.at"] : [];
   for (const f of html) {
     const s = await readFile(f, "utf8");
     for (const m of s.matchAll(/<(?:script|link)\b[^>]*(?:src|href)="(https?:)?\/\/([^/"]+)/g)) {
-      if (/rel="canonical"/.test(m[0])) continue;
+      if (/rel="canonical"/.test(m[0]) || allowed.includes(m[2])) continue;
       assert.fail(`${f.replace(DIST, "")} loads from ${m[2]}`);
     }
   }
+});
+
+test("analytics: configured GoatCounter snippet on every page, never with calculator values", async () => {
+  if (cfg.analytics?.provider !== "goatcounter") return;
+  for (const f of html) {
+    const s = await readFile(f, "utf8");
+    assert.ok(s.includes(`data-goatcounter="https://${cfg.analytics.code}.goatcounter.com/count"`), `${f} missing analytics`);
+  }
+  const p = await readFile(join(DIST, "privacy/index.html"), "utf8");
+  assert.match(p, /GoatCounter/);
 });

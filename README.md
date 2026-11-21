@@ -17,7 +17,7 @@ Static site, zero runtime dependencies, built by a ~100-line Node script and dep
 
 Browser QA of every tool control: copy `tests/browser/qa.html` to `dist/_qa.html`, run `npm run serve`, open http://localhost:8080/_qa.html (results appear on the page; delete the file afterwards).
 
-Then: `npm run check` (build + 37 tests) → `npm run serve` → open http://localhost:8080 → commit and push. GitHub Actions builds, tests and deploys; a failing test blocks the deploy.
+Then: `npm run check` (build + 38 tests) → `npm run serve` → open http://localhost:8080 → commit and push. GitHub Actions builds, tests and deploys; a failing test blocks the deploy.
 
 ## Publishing a new insight (e.g. the Tuesday post)
 1. Save the visual (optional) as `assets/insights/<short-name>.jpg` (16:9 works best, ~1600 px wide).

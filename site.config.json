@@ -77,8 +77,8 @@
   ],
   "analytics": {
     "_readme": "Privacy-first and OFF by default. Set provider to \"goatcounter\" and code to your GoatCounter site code (e.g. \"diegogonzalez\") to enable. Only anonymous events are sent: page views, tool-open, calculation-complete, share-click. Calculator values are never sent.",
-    "provider": null,
-    "code": null
+    "provider": "goatcounter",
+    "code": "diegogonzalez-av"
   },
   "collaboration": {
     "title": "Speaking, editorial & selected advisory",
